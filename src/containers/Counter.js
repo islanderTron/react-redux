@@ -1,9 +1,7 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 
-function Counter(props) {
-  const test = useSelector(state => state.counter);
-  const dispatch = useDispatch();
+function Counter({ ctr, onIncrementCounter, onDecrementCounter }) {
 
   const buttonStyle = {
     width: '200px',
@@ -21,33 +19,40 @@ function Counter(props) {
     justifyContent: 'center'
   }
 
-  function incrementHandler() {
-    return dispatch({ type: 'INCREMENT'})
-  }
-
-  function decrementHandler() {
-    return dispatch({ type: 'DECREMENT' })
-  }
-
   return (
     <div className="redux-counter" style={wrapperStyle}>
-      <h1 style={{ fontSize: "45px" }}>Current count: {test} </h1>
+      <h1 style={{ fontSize: "45px" }}>Current count: {ctr} </h1>
       <div className="buttons" >
-        <button 
+        <button
           style={buttonStyle}
-          aria-label='Increment' 
-          onClick={() => incrementHandler()}>
+          aria-label='Increment'
+          onClick={() => onIncrementCounter()}
+        >
           +
         </button>
-        <button 
-            style={buttonStyle}
-            aria-label='decrement' 
-            onClick={() => decrementHandler()}>
-            -
+        <button
+          style={buttonStyle}
+          aria-label='decrement'
+          onClick={() => onDecrementCounter()}
+        >
+          -
         </button>
       </div>
     </div>
   )
 }
 
-export default Counter;
+const mapStateToProps = state => {
+  return {
+    ctr: state.counter
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onIncrementCounter: () => dispatch({ type: 'INCREMENT' }),
+    onDecrementCounter: () => dispatch({ type: 'DECREMENT' })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
